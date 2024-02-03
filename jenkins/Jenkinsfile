@@ -1,40 +1,16 @@
 pipeline {
     agent any
-    environment {
-        M2_HOME='/opt/apache-maven-3.9.6'
-        PATH="$M2_HOME/bin:$PATH"
+
+    parameters {
+        choice(choices:["Test", "Dev", "QA", "PRE-PROD", "PROD"], description:"Options ", name: "deployEnv")
     }
+
     stages {
-        stage("Clean up"){
+        stage("Demo"){
             steps {
-                deleteDir()
-            }
-        }
-        stage("Clone Repo"){
-            steps {
-                sh "git clone https://github.com/jenkins-docs/simple-java-maven-app.git"
-            }
-        }
-        stage("Build"){
-            steps{
-                dir("simple-java-maven-app"){
-                    sh "mvn clean install"
-                }
-            }
-        }
-        stage("Test"){
-            steps{
-                dir("simple-java-maven-app"){
-                    sh "mvn test"
-                }
-            }
-        }
-        stage("Complete"){
-            steps{
-                dir("simple-java-maven-app"){
-                    echo "Complete"
-                }
+                echo "String is set to: ${params.deployEnv}"
             }
         }
     }
+    
 }
